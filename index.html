@@ -13,7 +13,7 @@
 
     <div id="el" class="container mx-auto m-12">
         <div class="flex flex-wrap rounded -mx-4">
-            <div class="joke w-1/4 p-4 rounded shadow-lg text-black-dark" :key="index" v-for="(joke, index) in jokes">
+            <div class="joke w-1/4 m-4 p-4 rounded shadow-lg text-black-dark" :key="joke.id" v-for="joke in jokes">
                 <div class="flex flex-col">
                     <div class="flex mb-4 px-2 py-2 items-center">
                         <img class="rounded-full w-8 h-8 mr-2" src="https://images.pexels.com/photos/34802/homeless-man-color-poverty.jpg" :alt="joke.writer">
@@ -22,9 +22,17 @@
                     <p class="mb-4 px-2 py-6">
                         {{ joke.content }}
                     </p>
+                    <div class="actions flex justify-between">
+                        <a class="no-underline cursor-pointer" @click.prevent="downVote(joke.id)">
+                            <span>{{ joke.downVotes }}</span><i class="fas fa-thumbs-down text-3xl text-red hover:text-red-light"></i>
+                        </a>
+                        <a class="no-underline cursor-pointer" @click.prevent="upVote(joke.id)">
+                            <span>{{ joke.upVotes }}</span><i class="fas fa-thumbs-up text-3xl text-blue hover:text-blue-light"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="joke w-1/4 p-4 rounded shadow-lg text-black-dark">
+            <div class="joke w-1/4 m-4 p-4 rounded shadow-lg text-black-dark">
                 <div class="flex flex-col">
                     <input class="mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
                     <p v-if="hasError('writer')" class="text-red text-xs italic"> {{ getError('writer') }}</p>
@@ -44,6 +52,7 @@
         new Vue({
             'el': '#el',
             data:{
+                id: 0,
                 joke: {
                     content: '',
                     writer: '',
@@ -51,7 +60,6 @@
                 jokes: [],
                 errors: []
             },
-
             methods:{
                 reset(){
                   this.joke.content = '';
@@ -61,6 +69,9 @@
 
                     if(this.isValidate()){
                         this.jokes.push({
+                            id: this.id,
+                            upVotes: 0,
+                            downVotes: 0,
                             content: this.joke.content,
                             writer: this.joke.writer
                         });
@@ -82,7 +93,8 @@
                         this.errors.push({
                             key: 'writer',
                             content: 'It would be nice if you can set your name'
-                        })
+                        });
+                        this.id ++;
                     }
 
                     return this.errors.length === 0;
@@ -92,6 +104,27 @@
                 },
                 getError(key){
                     return this.errors.filter((element) => element.key === key )[0].content;
+                },
+                downVote(id){
+                    let joke = this.findJokeById(id);
+                    joke.downVotes = joke.downVotes + 1;
+                    this.updateJoke(joke);
+                },
+                upVote(id){
+                    let joke = this.findJokeById(id);
+                    joke.upVotes = joke.upVotes + 1;
+                    this.updateJoke(joke);
+                },
+                findJokeById(id){
+                    return this.jokes.filter((joke) => joke.id === id)[0];
+                },
+                updateJoke(update_joke){
+                    this.jokes = this.jokes.map((joke) => {
+                        if(joke.id === update_joke.id){
+                            return update_joke;
+                        }
+                        return joke;
+                    })
                 }
             }
         })
