@@ -11,13 +11,16 @@
 </head>
 <body class="h-full text-black">
 
-    <div id="el" class="container mx-auto m-12">
-        <div class="flex flex-wrap rounded -mx-3">
-            <div class="relative w-1/4 p-3 rounded shadow-lg text-black-dark" :key="joke.id" v-for="joke in jokes" style="min-height: 360px;">
+    <div id="el" class="container mx-auto p-12">
+        <div class="md:flex flex-wrap rounded -mx-3">
+            <div class="relative md:w-1/4 p-3 rounded shadow-lg text-black-dark" :key="joke.id" v-for="(joke, index) in ordered" style="min-height: 360px;">
                 <div class="flex flex-col">
                     <div class="flex mb-4 px-2 py-2 items-center">
                         <img class="rounded-full w-8 h-8 mr-2" src="https://images.pexels.com/photos/34802/homeless-man-color-poverty.jpg" :alt="joke.writer">
                         <span> {{ joke.writer}} </span>
+                        <span v-if="index === 0" class="absolute pin-t pin-r mr-5 mt-5">
+                            <i class="fas fa-trophy text-yellow text-3xl"></i>
+                        </span>
                     </div>
                     <p class="break-words leading-normal">
                         {{ joke.content }}
@@ -32,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="joke w-1/4 p-3 rounded shadow-lg text-black-dark bg-grey-lightest text-sm" style="min-height: 360px">
+            <div class="joke md:w-1/4 p-3 rounded shadow-lg text-black-dark bg-grey-lightest text-sm" style="min-height: 360px">
                 <div class="flex flex-col">
                     <input class="bg-grey-lighter mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
                     <p v-if="hasError('writer')" class="text-red text-xs italic"> {{ getError('writer') }}</p>
@@ -60,7 +63,20 @@
                 jokes: [],
                 errors: []
             },
+            computed:{
+              ordered(){
+                  return this.jokes.sort((a, b) => {
+                      if(this.balanceOfJoke(a) > this.balanceOfJoke(b)){
+                          return -1;
+                      }
+                      return 1;
+                  })
+              }
+            },
             methods:{
+                balanceOfJoke(joke){
+                    return joke.downVotes + joke.upVotes;
+                },
                 reset(){
                   this.joke.content = '';
                   this.joke.writer = '';
