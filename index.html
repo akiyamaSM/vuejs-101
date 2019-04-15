@@ -7,11 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <title>TailwindCSS</title>
+    <title>My Jokes</title>
 </head>
 <body class="h-full text-black">
 
     <div id="el" class="container mx-auto p-12">
+        <div class="text-center mb-3 -mx-3">
+            <input class="bg-grey-lightest text-sm px-10 py-5 rounded-lg leading-normal" type="text" placeholder="Search in jokes" v-model="word">
+        </div>
         <div class="md:flex flex-wrap rounded -mx-3">
             <div class="relative md:w-1/4 p-3 rounded shadow-lg text-black-dark" :key="joke.id" v-for="(joke, index) in ordered" style="min-height: 360px;">
                 <div class="flex flex-col">
@@ -56,6 +59,7 @@
             'el': '#el',
             data:{
                 id: 0,
+                word: '',
                 joke: {
                     content: '',
                     writer: '',
@@ -65,8 +69,14 @@
             },
             computed:{
               ordered(){
-                  return this.jokes.sort((a, b) => {
-                      if(this.balanceOfJoke(a) > this.balanceOfJoke(b)){
+                  return this.jokes.filter((joke) => {
+                      if(this.word === '' || joke.content.includes(this.word)){
+                          return true;
+                      }
+
+                      return false;
+                  }).sort((a, b) => {
+                      if(this.balanceOfJoke(a) >= this.balanceOfJoke(b)){
                           return -1;
                       }
                       return 1;
