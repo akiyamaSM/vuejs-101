@@ -12,31 +12,31 @@
 <body class="h-full text-black">
 
     <div id="el" class="container mx-auto m-12">
-        <div class="flex flex-wrap rounded -mx-4">
-            <div class="joke w-1/4 m-4 p-4 rounded shadow-lg text-black-dark" :key="joke.id" v-for="joke in jokes">
+        <div class="flex flex-wrap rounded -mx-3">
+            <div class="relative w-1/4 p-3 rounded shadow-lg text-black-dark" :key="joke.id" v-for="joke in jokes" style="min-height: 360px;">
                 <div class="flex flex-col">
                     <div class="flex mb-4 px-2 py-2 items-center">
                         <img class="rounded-full w-8 h-8 mr-2" src="https://images.pexels.com/photos/34802/homeless-man-color-poverty.jpg" :alt="joke.writer">
                         <span> {{ joke.writer}} </span>
                     </div>
-                    <p class="mb-4 px-2 py-6">
+                    <p class="break-words leading-normal">
                         {{ joke.content }}
                     </p>
-                    <div class="actions flex justify-between">
-                        <a class="no-underline cursor-pointer" @click.prevent="downVote(joke.id)">
-                            <span>{{ joke.downVotes }}</span><i class="fas fa-thumbs-down text-3xl text-red hover:text-red-light"></i>
+                    <div class="absolute pin-b pin-r pin-l p-4 flex justify-between">
+                        <a class="no-underline cursor-pointer flex flex-col items-center" @click.prevent="downVote(joke.id)">
+                            <span>{{ joke.downVotes }}</span><i class="fas fa-frown text-3xl text-red hover:text-red-light"></i>
                         </a>
-                        <a class="no-underline cursor-pointer" @click.prevent="upVote(joke.id)">
-                            <span>{{ joke.upVotes }}</span><i class="fas fa-thumbs-up text-3xl text-blue hover:text-blue-light"></i>
+                        <a class="no-underline cursor-pointer flex flex-col items-center" @click.prevent="upVote(joke.id)">
+                            <span>{{ joke.upVotes }}</span><i class="fas fa-laugh-squint text-3xl text-blue hover:text-blue-light"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="joke w-1/4 m-4 p-4 rounded shadow-lg text-black-dark">
+            <div class="joke w-1/4 p-3 rounded shadow-lg text-black-dark bg-grey-lightest text-sm" style="min-height: 360px">
                 <div class="flex flex-col">
-                    <input class="mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
+                    <input class="bg-grey-lighter mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
                     <p v-if="hasError('writer')" class="text-red text-xs italic"> {{ getError('writer') }}</p>
-                    <textarea  class="mb-4 px-2 py-6" cols="30" rows="10" v-model="joke.content" placeholder="Make us laugh ..."></textarea>
+                    <textarea  class="mb-4 resize-none bg-grey-lighter px-2 py-6" cols="30" rows="10" v-model="joke.content" placeholder="Make us laugh ..."></textarea>
                     <p v-if="hasError('content')" class="text-red text-xs italic"> {{ getError('content') }}</p>
                     <a class="no-underline self-end cursor-pointer" @click.prevent="addJoke">
                         <i class="fas fa-plus-circle text-3xl text-grey hover:text-grey-darker"></i>
@@ -75,7 +75,7 @@
                             content: this.joke.content,
                             writer: this.joke.writer
                         });
-
+                        this.id ++;
                         this.reset();
                     }
                 },
@@ -94,7 +94,6 @@
                             key: 'writer',
                             content: 'It would be nice if you can set your name'
                         });
-                        this.id ++;
                     }
 
                     return this.errors.length === 0;
@@ -107,7 +106,7 @@
                 },
                 downVote(id){
                     let joke = this.findJokeById(id);
-                    joke.downVotes = joke.downVotes + 1;
+                    joke.downVotes = joke.downVotes - 1;
                     this.updateJoke(joke);
                 },
                 upVote(id){
