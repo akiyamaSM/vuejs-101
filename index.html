@@ -40,7 +40,19 @@
             </div>
             <div class="joke md:w-1/4 p-3 rounded shadow-lg text-black-dark bg-grey-lightest text-sm" style="min-height: 360px">
                 <div class="flex flex-col">
-                    <input class="bg-grey-lighter mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
+                    <div class="relative">
+                        <input class="bg-grey-lighter mb-4 px-2 py-2" type="text" v-model="joke.writer" placeholder="What's your name?">
+                        <ul class="list-reset absolute pin-x z-50 bg-white" v-if="proposedNames.length !== 0">
+                            <li
+                                    class="font-medium leading-normal py-2 px-2 hover:bg-grey-lighter cursor-pointer"
+                                    v-for="(name,index) in proposedNames" :key="index"
+                                    @click.prevent="selectName(name)"
+                            >
+                                {{ name }}
+                            </li>
+                        </ul>
+                    </div>
+
                     <p v-if="hasError('writer')" class="text-red text-xs italic"> {{ getError('writer') }}</p>
                     <textarea  class="mb-4 resize-none bg-grey-lighter px-2 py-6" cols="30" rows="10" v-model="joke.content" placeholder="Make us laugh ..."></textarea>
                     <p v-if="hasError('content')" class="text-red text-xs italic"> {{ getError('content') }}</p>
@@ -65,25 +77,37 @@
                     writer: '',
                 },
                 jokes: [],
-                errors: []
+                errors: [],
+                proposedNames: [],
+            },
+            watch:{
+                'joke.writer': function (newValue, oldValue) {
+                    if(newValue.length > 2){
+                        this.proposedNames = this.names.filter(name => name.indexOf(newValue) !== -1);
+                        return true;
+                    }
+
+                    this.proposedNames = [];
+                }
             },
             computed:{
-              ordered(){
-                  return this.jokes.filter((joke) => {
-                      if(this.word === '' || joke.content.includes(this.word)){
-                          return true;
-                      }
-
-                      return false;
-                  }).sort((a, b) => {
+                names(){
+                    return this.jokes.map(joke => joke.writer);
+                },
+                ordered(){
+                  return this.jokes.filter((joke) => this.word === '' || joke.content.includes(this.word)).sort((a, b) => {
                       if(this.balanceOfJoke(a) >= this.balanceOfJoke(b)){
                           return -1;
                       }
                       return 1;
                   })
-              }
+                }
             },
             methods:{
+                selectName(name){
+                  this.joke.writer = name;
+                  this.proposedNames = [];
+                },
                 balanceOfJoke(joke){
                     return joke.downVotes + joke.upVotes;
                 },
@@ -92,7 +116,6 @@
                   this.joke.writer = '';
                 },
                 addJoke(){
-
                     if(this.isValidate()){
                         this.jokes.push({
                             id: this.id,
