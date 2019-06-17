@@ -80,13 +80,13 @@
                 errors: [],
                 proposedNames: [],
             },
+            // watch for the list
             watch:{
                 'joke.writer': function (newValue, oldValue) {
                     if(newValue.length > 2){
                         this.proposedNames = this.names.filter(name => name.indexOf(newValue) !== -1);
                         return true;
                     }
-
                     this.proposedNames = [];
                 }
             },
@@ -94,6 +94,7 @@
                 names(){
                     return this.jokes.map(joke => joke.writer);
                 },
+                // list ordered by the count of upvote + downvote
                 ordered(){
                   return this.jokes.filter((joke) => this.word === '' || joke.content.includes(this.word)).sort((a, b) => {
                       if(this.balanceOfJoke(a) >= this.balanceOfJoke(b)){
@@ -104,17 +105,16 @@
                 }
             },
             methods:{
+                // Select the name
                 selectName(name){
                   this.joke.writer = name;
                   this.proposedNames = [];
                 },
+                // used to to order
                 balanceOfJoke(joke){
                     return joke.downVotes + joke.upVotes;
                 },
-                reset(){
-                  this.joke.content = '';
-                  this.joke.writer = '';
-                },
+                // ADD joke
                 addJoke(){
                     if(this.isValidate()){
                         this.jokes.push({
@@ -128,23 +128,25 @@
                         this.reset();
                     }
                 },
+                reset(){
+                  this.joke.content = '';
+                  this.joke.writer = '';
+                },
+                // validator
                 isValidate(){
                     this.errors = [];
-
                     if(this.joke.content === ''){
                         this.errors.push({
                             key: 'content',
                             content : 'Please put some content before'
                         })
                     }
-
                     if(this.joke.writer === ''){
                         this.errors.push({
                             key: 'writer',
                             content: 'It would be nice if you can set your name'
                         });
                     }
-
                     return this.errors.length === 0;
                 },
                 hasError(key){
@@ -153,6 +155,7 @@
                 getError(key){
                     return this.errors.filter((element) => element.key === key )[0].content;
                 },
+                // votes
                 downVote(id){
                     let joke = this.findJokeById(id);
                     joke.downVotes = joke.downVotes - 1;
