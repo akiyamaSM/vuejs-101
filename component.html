@@ -10,9 +10,12 @@
 <body class="h-full text-black">
 
     <div id="app">
+        <my-hello></my-hello>
+        <br>
         <label for="ice-cream-choice">Choose a flavor:</label>
         <auto-complete @option-selected="doSomething" :name="name" :data="data"></auto-complete>
     </div>
+
 
     <template id="auto-complete">
         <div>
@@ -27,6 +30,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
 
     <script>
+
+        Vue.component('my-hello', {
+            template : `<span> Hello</span>`,
+        })
+
+
         Vue.component('auto-complete', {
             props : ['data', 'name'],
             template : '#auto-complete',
