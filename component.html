@@ -5,22 +5,23 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Jokes</title>
+    <title>Auto Complete</title>
 </head>
 <body class="h-full text-black">
 
     <div id="app">
         <label for="ice-cream-choice">Choose a flavor:</label>
-        <auto-complete :name="name" :data="data"></auto-complete>
+        <auto-complete @option-selected="doSomething" :name="name" :data="data"></auto-complete>
     </div>
 
     <template id="auto-complete">
         <div>
-            <input type="text" :list="name"/>
+            <input type="text" :list="name" v-model="option"/>
 
             <datalist :id="name">
                 <option v-for="(value, index) in data" :value="value" :key="index">
             </datalist>
+            <input type="submit" @click="submit" value="Send data">
         </div>
     </template>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
@@ -29,6 +30,16 @@
         Vue.component('auto-complete', {
             props : ['data', 'name'],
             template : '#auto-complete',
+            data(){
+                return {
+                    option: ''
+                }
+            },
+            methods:{
+                submit(){
+                    this.$emit('option-selected', this.option)
+                }
+            }
         })
 
         new Vue({
@@ -40,6 +51,11 @@
                     'Symfony',
                     'Code Igniter'
                 ]
+            },
+            methods:{
+                doSomething(option){
+                    console.log(option)
+                }
             }
         })
     </script>
