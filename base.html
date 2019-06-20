@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@0.7.4/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <title>My Jokes</title>
+</head>
+<body class="h-full text-black">
+
+    <div id="el" class="container mx-auto p-12">
+        <!-- SEARCH INPUT -->
+        <div class="text-center mb-3 -mx-3">
+            <input class="bg-grey-lightest text-sm px-10 py-5 rounded-lg leading-normal" type="text" placeholder="Search in jokes">
+        </div>
+
+        <div class="md:flex flex-wrap rounded -mx-3">
+            <!-- Listings -->
+            <div class="relative md:w-1/4 p-3 rounded shadow-lg text-black-dark" style="min-height: 360px;">
+                <div class="flex flex-col">
+                    <div class="flex mb-4 px-2 py-2 items-center">
+                        <img class="rounded-full w-8 h-8 mr-2" src="https://images.pexels.com/photos/34802/homeless-man-color-poverty.jpg" :alt="joke.writer">
+                        <span> Inani El Houssain </span>
+                        <span class="absolute pin-t pin-r mr-5 mt-5">
+                            <i class="fas fa-trophy text-yellow text-3xl"></i>
+                        </span>
+                    </div>
+                    <p class="break-words leading-normal">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat maiores amet error.
+                    </p>
+                    <div class="absolute pin-b pin-r pin-l p-4 flex justify-between">
+                        <a class="no-underline cursor-pointer flex flex-col items-center">
+                            <span>0</span><i class="fas fa-frown text-3xl text-red hover:text-red-light"></i>
+                        </a>
+                        <a class="no-underline cursor-pointer flex flex-col items-center">
+                            <span>10</span><i class="fas fa-laugh-squint text-3xl text-blue hover:text-blue-light"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- ADD FORM -->
+            <div class="joke md:w-1/4 p-3 rounded shadow-lg text-black-dark bg-grey-lightest text-sm" style="min-height: 360px">
+                <div class="flex flex-col">
+                    <div class="relative">
+                        <input class="bg-grey-lighter mb-4 px-2 py-2" type="text"  placeholder="What's your name?">
+                        <!-- <ul class="list-reset absolute pin-x z-50 bg-white">
+                            <li class="font-medium leading-normal py-2 px-2 hover:bg-grey-lighter cursor-pointer">
+                                {{ name }}
+                            </li>
+                        </ul> -->
+                    </div>
+                    <textarea  class="mb-4 resize-none bg-grey-lighter px-2 py-6" cols="30" rows="10" placeholder="Make us laugh ..."></textarea>
+                    <a class="no-underline self-end cursor-pointer">
+                        <i class="fas fa-plus-circle text-3xl text-grey hover:text-grey-darker"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
+
+    <script>
+        new Vue({
+            'el': '#el',
+            data:{
+                id: 0,
+                word: '',
+                joke: {
+                    content: '',
+                    writer: '',
+                },
+                jokes: [],
+                errors: [],
+                proposedNames: [],
+            },
+            methods:{
+                findJokeById(id){
+                    return this.jokes.filter((joke) => joke.id === id)[0];
+                }
+            }
+        })
+    </script>
+</body>
+</html>
